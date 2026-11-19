@@ -31,13 +31,13 @@ static void (*core_unload_game)(void);
 static void (*core_run)(void);
 
 
-struct sym_entry 
+struct symbol_entry 
 {
     const char *name; 
     void **ptr;
 };
 
-static const struct sym_entry retro_syms[] = {
+static const struct symbol_entry retro_symbols[] = {
     {"retro_init", (void **)&core_init},
     {"retro_deinit", (void **)&core_deinit},
     {"retro_get_system_info", (void **)&core_get_system_info},
@@ -149,12 +149,12 @@ bool frontend_core_load(const char *core_path)
         return false;
     }
 
-    for (size_t i = 0; i < sizeof(retro_syms) / sizeof(retro_syms[0]); i++)
+    for (size_t i = 0; i < sizeof(retro_symbols) / sizeof(retro_symbols[0]); i++)
     {
-        *retro_syms[i].ptr = dlsym(core_handle, retro_syms[i].name);
-        if (!*retro_syms[i].ptr)
+        *retro_symbols[i].ptr = dlsym(core_handle, retro_symbols[i].name);
+        if (!*retro_symbols[i].ptr)
         {
-            SDL_Log("Failed to load symbol %s: %s", retro_syms[i].name, dlerror());
+            SDL_Log("Failed to load symbol %s: %s", retro_symbols[i].name, dlerror());
             dlclose(core_handle);
             core_handle = NULL;
             return false;
@@ -220,7 +220,7 @@ bool frontend_core_load_game(const char *rom_path)
         return false;
     }
 
-    core_get_system_av_info(&av_info);    // le core remplit TA variable
+    core_get_system_av_info(&av_info);    
 
     SDL_Log("Video: %ux%u (max %ux%u), %.2f fps",
             av_info.geometry.base_width, av_info.geometry.base_height,

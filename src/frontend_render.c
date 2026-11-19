@@ -36,6 +36,7 @@ bool frontend_render_SDLinit(void) {
 }
 
 
+
 SDL_Window* frontend_render_get_window(void) {
     if (!window) {
         SDL_Log("Window has not been initialized.");
@@ -180,3 +181,4 @@ void frontend_render_deinit(void)
     window   = NULL;
     SDL_Quit();
 }
+
