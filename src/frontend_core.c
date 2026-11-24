@@ -6,6 +6,7 @@
 #include "frontend_core.h"
 #include "frontend_render.h"
 #include "frontend_audio.h"
+#include "frontend_input.h"
 #include <limits.h>
 
 static void *core_handle = NULL;
@@ -105,18 +106,6 @@ static bool env_cb(unsigned cmd, void *data)
 }
 
 
-static void input_poll(void)
-{
-}
-
-static int16_t input_state(unsigned port, unsigned device, unsigned index, unsigned id)
-{
-    (void)port;
-    (void)device;
-    (void)index;
-    (void)id;
-    return 0;        // aucun bouton appuyé
-}
 
 
 
@@ -158,8 +147,8 @@ bool frontend_core_load(const char *core_path)
     core_set_video_refresh(frontend_render_video_refresh);
     core_set_audio_sample(audio_sample);
     core_set_audio_sample_batch(audio_sample_batch);
-    core_set_input_poll(input_poll);
-    core_set_input_state(input_state);
+    core_set_input_poll(frontend_input_poll);
+    core_set_input_state(frontend_input_state);
 
     core_loaded = true;
     return true;

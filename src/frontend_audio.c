@@ -1,5 +1,8 @@
 #include "frontend_audio.h"
 
+#define TARGET_S   0.06  
+#define MAX_DELTA  0.005 
+
 static SDL_AudioStream *stream = NULL;
 
 bool frontend_SDL_audio_init(int freq)
@@ -48,3 +51,5 @@ size_t audio_sample_batch(const int16_t *data, size_t frames)
     SDL_PutAudioStreamData(stream, data, (int)(frames * 2 * sizeof(int16_t)));
     return frames;
 }
+
+
