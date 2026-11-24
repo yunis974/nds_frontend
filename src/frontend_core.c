@@ -5,6 +5,7 @@
 #include <stdarg.h>         // va_list (pour le log)
 #include "frontend_core.h"
 #include "frontend_render.h"
+#include "frontend_audio.h"
 #include <limits.h>
 
 static void *core_handle = NULL;
@@ -103,19 +104,6 @@ static bool env_cb(unsigned cmd, void *data)
 
 }
 
-// --- Stubs temporaires (audio / input) : à remplacer par frontend_audio / frontend_input ---
-
-static void audio_sample(int16_t left, int16_t right)
-{
-    (void)left;
-    (void)right;
-}
-
-static size_t audio_sample_batch(const int16_t *data, size_t frames)
-{
-    (void)data;
-    return frames;   // "j'ai tout consommé"
-}
 
 static void input_poll(void)
 {
@@ -267,6 +255,11 @@ void frontend_core_unload(void)
 }
 
 const struct retro_system_av_info *frontend_core_get_av_info(void)
+{
+    return &av_info;
+}
+
+struct retro_system_av_info * get_avinfo()
 {
     return &av_info;
 }

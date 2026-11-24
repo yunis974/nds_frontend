@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include "frontend_core.h"
 #include "frontend_render.h"
+#include "frontend_audio.h"
 
 int main(int argc, char **argv)
 {
@@ -14,6 +15,7 @@ int main(int argc, char **argv)
         SDL_Log("Failed to initialize SDL.");
         return 1;
     }
+
 
     // 2. Charger le core (.so)
     if (!frontend_core_load(argv[1])) {
@@ -29,6 +31,15 @@ int main(int argc, char **argv)
         frontend_render_deinit();
         return 1;
     }
+
+    if (!frontend_SDL_audio_init((int)get_avinfo()->timing.sample_rate))
+    {
+        SDL_Log("Failed to init SDL_Audio");
+        frontend_core_unload();
+        frontend_render_deinit();
+        return 1;       
+    }
+
 
     // 4. Boucle principale
     bool running = true;
@@ -49,5 +60,6 @@ int main(int argc, char **argv)
     // 5. Nettoyage, dans l'ordre inverse
     frontend_core_unload();
     frontend_render_deinit();
+    frontend_SDL_audio_deinit();
     return 0;
 }

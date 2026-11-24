@@ -10,4 +10,6 @@ bool frontend_core_load_game(const char *rom_path);
 void frontend_core_run(void);
 void frontend_core_unload(void);
 
+struct retro_system_av_info * get_avinfo();
+
 #endif
