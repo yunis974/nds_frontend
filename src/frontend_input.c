@@ -1,9 +1,6 @@
 #include "frontend_input.h"
 #include "libretro.h"
 
-// ---------------------------------------------------------------------------
-// État interne
-// ---------------------------------------------------------------------------
 
 static SDL_Window *s_window = NULL;
 
@@ -19,18 +16,18 @@ static bool    s_ptr_pressed = false;
 // ---------------------------------------------------------------------------
 
 static const SDL_Scancode s_keymap[] = {
-    [RETRO_DEVICE_ID_JOYPAD_A]      = SDL_SCANCODE_X,
-    [RETRO_DEVICE_ID_JOYPAD_B]      = SDL_SCANCODE_Z,
-    [RETRO_DEVICE_ID_JOYPAD_X]      = SDL_SCANCODE_S,
-    [RETRO_DEVICE_ID_JOYPAD_Y]      = SDL_SCANCODE_A,
+    [RETRO_DEVICE_ID_JOYPAD_A]      = SDL_SCANCODE_RIGHT,
+    [RETRO_DEVICE_ID_JOYPAD_B]      = SDL_SCANCODE_DOWN,
+    [RETRO_DEVICE_ID_JOYPAD_X]      = SDL_SCANCODE_UP,
+    [RETRO_DEVICE_ID_JOYPAD_Y]      = SDL_SCANCODE_LEFT,
     [RETRO_DEVICE_ID_JOYPAD_L]      = SDL_SCANCODE_Q,
     [RETRO_DEVICE_ID_JOYPAD_R]      = SDL_SCANCODE_W,
-    [RETRO_DEVICE_ID_JOYPAD_START]  = SDL_SCANCODE_RETURN,
+    [RETRO_DEVICE_ID_JOYPAD_START]  = SDL_SCANCODE_LCTRL,
     [RETRO_DEVICE_ID_JOYPAD_SELECT] = SDL_SCANCODE_RSHIFT,
-    [RETRO_DEVICE_ID_JOYPAD_UP]     = SDL_SCANCODE_UP,
-    [RETRO_DEVICE_ID_JOYPAD_DOWN]   = SDL_SCANCODE_DOWN,
-    [RETRO_DEVICE_ID_JOYPAD_LEFT]   = SDL_SCANCODE_LEFT,
-    [RETRO_DEVICE_ID_JOYPAD_RIGHT]  = SDL_SCANCODE_RIGHT,
+    [RETRO_DEVICE_ID_JOYPAD_UP]     = SDL_SCANCODE_W,
+    [RETRO_DEVICE_ID_JOYPAD_DOWN]   = SDL_SCANCODE_S,
+    [RETRO_DEVICE_ID_JOYPAD_LEFT]   = SDL_SCANCODE_A,
+    [RETRO_DEVICE_ID_JOYPAD_RIGHT]  = SDL_SCANCODE_D,
 };
 
 #define KEYMAP_SIZE (sizeof(s_keymap) / sizeof(s_keymap[0]))

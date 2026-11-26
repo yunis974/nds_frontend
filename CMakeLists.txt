@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(pemu_frontend LANGUAGES C)
+project(nds_frontend LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -51,18 +51,18 @@ endif()
 # ---------------------------------------------------------------------------
 # Exécutable
 # ---------------------------------------------------------------------------
-file(GLOB_RECURSE PEMU_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE NDS_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.c)
 
-add_executable(pemu ${PEMU_SOURCES})
+add_executable(nds-frontend ${NDS_SOURCES})
 
-target_include_directories(pemu PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(nds-frontend PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(pemu PRIVATE
+target_link_libraries(nds-frontend PRIVATE
     libretro_api
     SDL3::SDL3
     ${CMAKE_DL_LIBS}    # dlopen / dlsym pour charger le core
 )
 
-target_compile_options(pemu PRIVATE -Wall -Wextra)
+target_compile_options(nds-frontend PRIVATE -Wall -Wextra)
 
-install(TARGETS pemu RUNTIME DESTINATION bin)
+install(TARGETS nds-frontend RUNTIME DESTINATION bin)

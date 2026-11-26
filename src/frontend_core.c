@@ -98,6 +98,9 @@ static bool env_cb(unsigned cmd, void *data)
             ((struct retro_log_callback *)data)->log = core_log;
             return true;
             
+        case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
+            *(bool *)data = false;
+            return true;
         default:
             SDL_Log("Unknown environment command: %u", cmd);
             return false;
