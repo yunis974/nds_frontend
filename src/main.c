@@ -34,6 +34,13 @@ int main(int argc, char **argv)
         return 1;
     }
 
+
+    if(!frontend_core_load_sram())
+    {
+        SDL_Log("Failed to load SRAM");
+    }
+
+
     if (!frontend_SDL_audio_init((int)get_avinfo()->timing.sample_rate))
     {
         SDL_Log("Failed to init SDL_Audio");
@@ -44,7 +51,6 @@ int main(int argc, char **argv)
 
     frontend_input_init(frontend_render_get_window());
 
-    char buf [64];
     // 4. Boucle principale
     bool running = true;
     while (running) {
@@ -62,9 +68,9 @@ int main(int argc, char **argv)
         frontend_render_present(true, get_avinfo()->timing.fps); 
     }
 
-    // 5. Nettoyage, dans l'ordre inverse
+    frontend_core_save_sram();
+    frontend_SDL_audio_deinit();
     frontend_core_unload();
     frontend_render_deinit();
-    frontend_SDL_audio_deinit();
     return 0;
 }
