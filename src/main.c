@@ -4,6 +4,7 @@
 #include "frontend_audio.h"
 #include "frontend_input.h"
 
+
 int main(int argc, char **argv)
 {
     if (argc < 3) {
@@ -33,6 +34,13 @@ int main(int argc, char **argv)
         return 1;
     }
 
+
+    if(!frontend_core_load_sram())
+    {
+        SDL_Log("Failed to load SRAM");
+    }
+
+
     if (!frontend_SDL_audio_init((int)get_avinfo()->timing.sample_rate))
     {
         SDL_Log("Failed to init SDL_Audio");
@@ -42,8 +50,6 @@ int main(int argc, char **argv)
     }
 
     frontend_input_init(frontend_render_get_window());
-
-
 
     // 4. Boucle principale
     bool running = true;
@@ -57,13 +63,14 @@ int main(int argc, char **argv)
                 running = false;
         }
 
-        frontend_core_run();   // le core émule 1 frame → appelle video_refresh
-        frontend_render_present();  // on affiche la frame (attend le vsync)
+        
+        frontend_core_run(); 
+        frontend_render_present(true, get_avinfo()->timing.fps); 
     }
 
-    // 5. Nettoyage, dans l'ordre inverse
+    frontend_core_save_sram();
+    frontend_SDL_audio_deinit();
     frontend_core_unload();
     frontend_render_deinit();
-    frontend_SDL_audio_deinit();
     return 0;
 }

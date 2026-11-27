@@ -31,6 +31,11 @@ static void (*core_get_system_av_info)(struct retro_system_av_info *);
 static bool (*core_load_game)(const struct retro_game_info *);
 static void (*core_unload_game)(void);
 static void (*core_run)(void);
+static size_t (*core_serialize_size)(void);
+static bool (*core_serialize)(void *data, size_t size);
+static bool (*core_unserialize)(const void *data, size_t size);
+static void  *(*core_get_memory_data)(unsigned id);
+static size_t (*core_get_memory_size)(unsigned id);
 
 
 struct symbol_entry 
@@ -53,6 +58,11 @@ static const struct symbol_entry retro_symbols[] = {
     {"retro_set_audio_sample_batch", (void **)&core_set_audio_sample_batch},
     {"retro_set_input_poll", (void **)&core_set_input_poll},
     {"retro_set_input_state", (void **)&core_set_input_state},
+    {"retro_serialize_size", (void **)&core_serialize_size},
+    {"retro_serialize_size", (void **)&core_serialize},
+    {"retro_unserialize", (void **)&core_unserialize},
+    {"retro_get_memory_data", (void **)&core_get_memory_data},
+    {"retro_get_memory_size", (void **)&core_get_memory_size},
 };
 
 
@@ -246,6 +256,7 @@ void frontend_core_unload(void)
     }
 }
 
+
 const struct retro_system_av_info *frontend_core_get_av_info(void)
 {
     return &av_info;
@@ -254,4 +265,70 @@ const struct retro_system_av_info *frontend_core_get_av_info(void)
 struct retro_system_av_info * get_avinfo()
 {
     return &av_info;
+}
+
+bool frontend_core_load_save(void)
+{
+    char *savestatel = "/home/yunis/nds_frontend/savefiles/new-super-mario-bros.sav";
+
+
+    if (savestatel) {
+		FILE *fd = fopen(savestatel, "rb");
+		if (!fd)
+        {
+            SDL_Log("Failed to find savestate file '%s'", savestatel);
+            return false;
+        }
+		void *saveblob = malloc(core_serialize_size());
+		size_t rdb = fread(saveblob, 1, core_serialize_size(), fd);
+        
+		if (core_unserialize(saveblob, rdb))
+        {
+            SDL_Log("Failed to load savestate, core returned error");
+            return false;
+        }
+        fclose(fd);
+        free(saveblob);
+	}
+
+    return true;
+}
+
+bool frontend_core_load_sram()
+{
+    char * path = "/home/yunis/nds_frontend/savefiles/Legend of Zelda, The - Spirit Tracks (USA, Australia) (En,Fr,Es).sav";
+    void  *mem  = core_get_memory_data(RETRO_MEMORY_SAVE_RAM);
+    size_t size = core_get_memory_size(RETRO_MEMORY_SAVE_RAM);
+    if (!mem || size == 0)
+        return false;
+
+    FILE *f = fopen(path, "rb");
+    if (!f)
+        return false;  
+
+    size_t rd = fread(mem, 1, size, f); 
+    fclose(f);
+
+    printf("SRAM: loaded %zu / %zu bytes\n", rd, size);
+
+    return true;
+}
+
+void frontend_core_save_sram()
+{
+    char * path = "/home/yunis/nds_frontend/savefiles/Legend of Zelda, The - Spirit Tracks (USA, Australia) (En,Fr,Es).sav";
+    void  *mem  = core_get_memory_data(RETRO_MEMORY_SAVE_RAM);
+    size_t size = core_get_memory_size(RETRO_MEMORY_SAVE_RAM);
+    if (!mem || size == 0)
+        return;
+
+    FILE *f = fopen(path, "wb");
+    if (!f)
+        return;  
+
+    size_t wd = fwrite(mem, 1, size, f); 
+    fclose(f);
+
+    printf("SRAM: saved %zu / %zu bytes\n", wd, size);
+
 }
