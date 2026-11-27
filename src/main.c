@@ -4,6 +4,7 @@
 #include "frontend_audio.h"
 #include "frontend_input.h"
 
+
 int main(int argc, char **argv)
 {
     if (argc < 3) {
@@ -43,8 +44,7 @@ int main(int argc, char **argv)
 
     frontend_input_init(frontend_render_get_window());
 
-
-
+    char buf [64];
     // 4. Boucle principale
     bool running = true;
     while (running) {
@@ -57,8 +57,9 @@ int main(int argc, char **argv)
                 running = false;
         }
 
-        frontend_core_run();   // le core émule 1 frame → appelle video_refresh
-        frontend_render_present();  // on affiche la frame (attend le vsync)
+        
+        frontend_core_run(); 
+        frontend_render_present(true, get_avinfo()->timing.fps); 
     }
 
     // 5. Nettoyage, dans l'ordre inverse

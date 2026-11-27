@@ -18,7 +18,7 @@ SDL_Renderer* frontend_render_get_renderer(void);
 bool frontend_render_set_pixel_format(enum retro_pixel_format fmt);
 bool frontend_render_set_geometry(const struct retro_game_geometry *geom);
 void frontend_render_video_refresh(const void *data, unsigned int width, unsigned int height, size_t pitch);
-void frontend_render_present(void);
+void frontend_render_present(bool debug, double fps);
 void frontend_render_deinit(void);
 
 

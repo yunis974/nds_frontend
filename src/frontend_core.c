@@ -246,6 +246,7 @@ void frontend_core_unload(void)
     }
 }
 
+
 const struct retro_system_av_info *frontend_core_get_av_info(void)
 {
     return &av_info;

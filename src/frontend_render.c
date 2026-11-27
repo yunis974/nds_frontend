@@ -1,5 +1,6 @@
 #include "frontend_render.h"
-
+#include <stdio.h>
+#include <SDL3/SDL_render.h>
 
 
 static SDL_Window *window = NULL;
@@ -131,7 +132,9 @@ void frontend_render_video_refresh(const void *data, unsigned int width, unsigne
     frame_height = height;
 }
 
-void frontend_render_present(void)
+
+
+void frontend_render_present(bool debug, double fps)
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -157,15 +160,28 @@ void frontend_render_present(void)
        SDL_FRect src = {0.0f, 0.0f, (float)frame_width, (float)frame_height};
        SDL_FRect dst = 
        {
-           (float)(out_w - (int)dst_w) / 2.0f,
-           (float)(out_h - (int)dst_h) / 2.0f,
-           dst_w,
-           dst_h
-       };
+        (float)(out_w - (int)dst_w) / 2.0f,
+        (float)(out_h - (int)dst_h) / 2.0f,
+        dst_w,
+        dst_h
+    };
 
        SDL_RenderTexture(renderer, texture, &src, &dst);
     }
 
+    if(debug)
+    {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        char buf [64];
+        sprintf(buf, "FPS: %f", fps);
+        if (!(SDL_RenderDebugText(frontend_render_get_renderer(), 100, 100, buf)))
+        {
+            SDL_Log("Failed debug msg: %s", SDL_GetError());
+        }
+    }
+
+
+    
     SDL_RenderPresent(renderer);
 
 }
