@@ -1,4 +1,5 @@
 #include "frontend_render.h"
+#include <SDL3/SDL.h>
 
 
 
@@ -9,8 +10,9 @@ static SDL_PixelFormat pixel_format = SDL_PIXELFORMAT_XRGB1555;
 static unsigned int frame_width = 0;
 static unsigned int frame_height = 0;
 static float aspect_ratio = 0.0f;
-
 //init the sdl window and renderer context, it check for errors and log them if any
+
+
 bool frontend_render_SDLinit(void) {
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -18,19 +20,22 @@ bool frontend_render_SDLinit(void) {
         return false;
     }
 
-    window = SDL_CreateWindow("NDS Frontend",1280,720,SDL_WINDOW_FULLSCREEN);
-    if(!window) {
+    window = SDL_CreateWindow("NDS Frontend", 1280, 720, SDL_WINDOW_FULLSCREEN);
+    if (!window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         return false;
     }
 
-    renderer = SDL_CreateRenderer(window, NULL);
-    if(!renderer) {
+    SDL_SyncWindow(window);
+
+    renderer = SDL_CreateRenderer(window, "opengl");
+    if (!renderer) {
         SDL_Log("Failed to create renderer: %s", SDL_GetError());
         return false;
-    }
-    
+    }   
     SDL_SetRenderVSync(renderer, 1);
+
+    SDL_Log("Renderer: %s", SDL_GetRendererName(renderer));
 
     return true;
 }
